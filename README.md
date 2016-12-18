@@ -42,7 +42,7 @@ The different states of the files in a git project are:
                   status becomes unstaged.
 
 <br/>
-<img align="right" src="images/git-lifecycle.png">
+<img src="images/git-lifecycle.png">
 <br/>
 
 ```bash
