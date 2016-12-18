@@ -6,103 +6,159 @@
 
 `git init`
 
-**See project state.**
-If a new file was created then this command will show that the file is untracked and needs to be added, to include in the project what will be committed.
+**Clone existing repo**
 
-`git status`
+If you want to get started with an existing repository, then you need to clone it:
+
+```bash
+# clone a repo
+git clone [url]
+
+# clone repo into specific directory
+git clone https://github.com/libgit2/libgit2 mylibgit
+```
+
+**See project state.**
+
+The main tool used to view the project state and the stage that the files are, is:
+
+```bash
+# view file status
+git status
+
+# view simplified output
+git status -s
+```
 
 **Making changes**
 
-Staging area is the place where you group files together before you commit them to Git. Type of files are:
-- staged (files are ready to be commited-added to the project)
-- unstaged (files with changes that have not yet been prepared to be commited - added to the project)
-- untracked (files not tracked by Git yet - need to be added)
-- deleted (file has been deleted and is waiting to be removed from Git).
+The different states of the files in a git project are:
+
+- **untracked**   are files not tracked by Git yet - need to be added
+- **unstaged**    are files that are tracked by Git, but have changes that have not
+                  yet been prepared to be commited
+- **staged**      are files are ready to be commited
+- **unmodified**  are files that have been commited. Once they are modified, their
+                  status becomes unstaged.
+
+<br/>
+<img align="right" src="images/git-lifecycle.png">
+<br/>
 
 ```bash
-# make a file tracked
+# track a new file
 git add [filename]
+
 # dot stands for current dir - add everything in and beneath
 git add -A .
+
 # with the * in “” git adds all the .txt files even in subdirectories
 git add \*.txt
+
 # remove files from staging area
 git reset [filename]
-# Commit is a snapshot of our repository.
+
+# Commit is a snapshot of our repository - files are now unmodified
 git commit -m “name of snapshot”
+
+# goes back to the last commit of the file
+git checkout -- octocat.txt
+
+# If you made a small change and want to add it to the last commit, add it via
+#git add, and run
+git commit --amend
 ```
-
-
-**View the history of commits**
-
-`git log`
 
 **Making the changes available online**
 
 In order to push a local repo to Git Server, we need to add a remote repository
 
 ```bash
-# first do that to check if remote exists
-git ls-remote
-# it is good to name remotes as origin
+# view linked remote repos
+git remote
+
+# get verbose output
+git remote -v
+
+# add remote link - usually named as origin
 git remote add origin [link]
-# push to a default remote branch with name (with the -u flag Git remembers the params)
-git push - u origin master
+
+# push to a online repo named origin on the master branch (with the -u flag Git
+# remembers the params)
+git push -u origin master
+
 # to get locally the changes in the remote repo
 git pull origin master
 ```
 
-Sometimes we may want to pull first and then commit the changes
-```bash
-# run before pulling
-git stash
-# run that to commit changes after having pulled
-git stash apply
-```
-
-When we pull from remote repo, some things will have changed. To see what is different from our last commit. Looks for changes at files that have already been staged. Note: the HEAD is the pointer that by default points to the most recent commit (it can be used as a quick way to reference that commit).
-
-```bash
-git diff HEAD
-# use that to see the differences just staged
-git diff --staged
-```
-
 **Difference between git clone and pull**
 
-- git clone is how you get a local copy of an existing repository to work on. It's usually only used once for a given repository, unless you want to have multiple working copies of it around. (Or want to get a clean copy after messing up your local one...)
-- git pull (or git fetch + git merge) is how you update that local copy with new commits from the remote repository. If you are collaborating with others, it is a command that you will run frequently.
+- `git clone` is how you get a local copy of an existing repository to work on.
+It's usually only used once for a given repository, unless you want to have multiple working copies of it around. (Or want to get a clean copy after messing up your
+local one...)
+- `git pull` (or `git fetch` + `git merge`) is how you update that local copy with
+new commits from the remote repository. If you are collaborating with others, it
+is a command that you will run frequently.
+
+**Show file changes**
+
+```bash
+# view changes in a file from latest commit
+git diff [filename]
+
+# view changes in all files from latest commit (HEAD is pointer to most recent commit)
+git diff HEAD
+
+# view the differences that are staged for next commit
+git diff --staged
+
+# --staged and --cache are synonyms
+git diff --cached
+```
 
 **Removing files**
 
 ```bash
-# To remove files (this way they are not only deleted but also removed from the working tree)
+# remove files (they are not only deleted but also removed from the working tree)
 git rm [\*.txt]
 
-# to recursively remove all files and folders from the current directory
+# recursively remove all files and folders from the current directory
 git rm -r name_of_folder
 ```
 
-### Branches
+**View the history of commits**
 
-If you are working on a branch and you want to switch to a different one
+`git log`
+
+**Ignoring files**
+
+Often you will want to prevent git from tracking files such as big size data sources.
+To ignore them, list them in a .gitignore file.
+
 ```bash
-git checkout [name of branch]
-# goes back to the last commit of the file
-git checkout -- octocat.txt
+# create .gitignore file
+touch .gitignore
+
+# add the files you want to ignore
+echo 'data/*' > .gitignore
 ```
 
-To work on a feature or a bug of the project, you create a separate branch and you make separate commits to it. When done you merge it back to the master branch (and then push it remotely).
+
+### Branches
+
+To work on a feature or a bug of the project, you create a separate branch and
+you make separate commits to it. When done you merge it back to the master branch
+(and then push it remotely).
 
 ```bash
 # show local branches
 git branch
 
-# show all
-git branch -a
-
 # show only remote
 git branch -r
+
+# show all (both remote and local)
+git branch -a
 
 # viewing branches sorted
 git for-each-ref --sort=-committerdate refs/heads/
@@ -110,18 +166,47 @@ git for-each-ref --sort=-committerdate refs/heads/
 # create the branch and switch to it
 git branch [name of branch]
 
+# switch to a branch
+git checkout [name of branch]
+
 # delete the branch
 git branch -d [name of branch]
+
+# once in master branch merge the new feature
+git merge [name of branch]
 ```
 
-When we are on master branch and we want to merge another branch into it
 
-`git merge [name of branch]`
+## Stashing
+
+Sometimes, while in the middle of some uncommitted work, we may want to pull some
+new changes or switch to a new branch without having to do a commit of half-done
+work. Stashing takes the unfinished work and pushes it to a stack of unfinished
+changes.
+
+```bash
+# run before pulling new work
+git stash
+
+# view stored stashes
+git stash list
+
+# apply the stashed worked
+git stash apply
+
+# apply an older stash
+git stash apply stash@{1}
+
+# once applied stashed work remove from stack
+git stash drop
+```
 
 
 ## Pull request
 
-Allows the project maintainers to make comments and review any changes you have made locally before you merge and then push them to remote
+Allows the project maintainers to make comments and review any changes you have
+made locally before you merge and then push them to remote
+
 
 ## Submodules
 
@@ -144,7 +229,8 @@ git submodule init
 # fetch all data from submodule project
 git submodule update
 
-# alternativelly to automatically initialize and update each submodule in the repository
+# alternativelly to automatically initialize and update each submodule in the
+# repository
 git clone --recursive [main-project-url]
 ```
 
