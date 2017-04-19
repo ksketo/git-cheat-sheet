@@ -255,6 +255,45 @@ git commit -m "updated my submodule"
 git push origin master
 ```
 
+## Writing Good Commit Messages
+
+Structure your commit message like this:
+
+From: [http://git-scm.com/book/ch5-2.html](http://git-scm.com/book/ch5-2.html)
+
+> ```
+> Short (50 chars or less) summary of changes
+>
+> More detailed explanatory text, if necessary.  Wrap it to about 72
+> characters or so.  In some contexts, the first line is treated as the
+> subject of an email and the rest of the text as the body.  The blank
+> line separating the summary from the body is critical (unless you omit
+> the body entirely); tools like rebase can get confused if you run the
+> two together.
+>
+> Further paragraphs come after blank lines.
+>
+>   - Bullet points are okay, too
+>
+>   - Typically a hyphen or asterisk is used for the bullet, preceded by a
+>     single space, with blank lines in between, but conventions vary here
+> ```
+
+**The seven rules of a great Git commit message**
+
+1. Separate subject from body with a blank line
+2. Limit the subject line to 50 characters
+3. Capitalize the subject line
+4. Do not end the subject line with a period
+5. Use the imperative mood in the subject line
+6. Wrap the body at 72 characters
+7. Use the body to explain what and why vs. how
+
 ## Git Resources
 
 - https://git-scm.com
+
+## References
+
+- https://git-scm.com
+- https://chris.beams.io/posts/git-commit/
